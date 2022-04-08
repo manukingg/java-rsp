@@ -1,5 +1,18 @@
+.computer {
+    height: 32px;
+}
+
 .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 36px 0;
+}
+
+.btn {
+    margin: 0 12px;
+}
+
+.player {
+    height: 32px;
 }

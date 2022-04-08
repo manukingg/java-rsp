@@ -9,7 +9,7 @@ function computerPlay () {
             return "scissors";
     }       
 }
-const numberToString = {'-3':'Paper beats rock! You lose', '-2':'Rock beats scissors! You lose!', '-1':'Scissors beat paper! You lose!', 0:'Draw! Nobody wins', 1:'Rock beats scissors! You win!', 2:'Scissors beats paper! You win!', 3:'Paper beats rock! You win!Paper beats rock! You win!'}
+const numberToString = {'-3':'Paper beats rock! You lose', '-2':'Rock beats scissors! You lose!', '-1':'Scissors beat paper! You lose!', 0:'Draw! Nobody wins', 1:'Rock beats scissors! You win!', 2:'Scissors beats paper! You win!', 3:'Paper beats rock! You win!'}
 function playRound (playerSelection, computerSelection){
     if (playerSelection.toLowerCase() == computerSelection){
         return 0;
@@ -31,21 +31,22 @@ function playRound (playerSelection, computerSelection){
 function game (){
     let computerScore = 0;
     let playerScore = 0;
-    let leftGames = 4;
+    const body = document.querySelector('body');
     const buttons = document.querySelectorAll('button');
     let counter = 0;
+    const currentScore = document.querySelector('.currentScore');
     buttons.forEach((button) => {
         button.addEventListener('click', function() {
-            if (counter < 5) {
+            if (counter < 4) {
                 computerSelection = computerPlay();
                 computerSelection.textContent = 'Computer\'s choice is ' + computerSelection;
                 const playerSelection = button.textContent;
-                console.log("Computer\'s selection is " + computerSelection);
                 const computerResultText = document.querySelector('.computer');
                 computerResultText.textContent = "Computer\'s selection is " + computerSelection;
-                console.log("Player\'s selection is : " + playerSelection);
+                computerResultText.setAttribute('style', 'display: flex; justify-content: center;');
                 const playerResultText = document.querySelector('.player');
                 playerResultText.textContent = "Your\'s selection is " + playerSelection;
+                playerResultText.setAttribute('style', 'display: flex; justify-content: center;')
                 const playRoundResult = playRound(playerSelection, computerSelection);
                 if (playRoundResult > 0){
                     playerScore ++;
@@ -53,29 +54,42 @@ function game (){
                 else if (playRoundResult < 0){
                     computerScore ++;
                 }
-                console.log(numberToString[playRoundResult]);
-                console.log("Your score is " + playerScore + " and Computer\'s score is " + computerScore);
-                console.log(leftGames - counter + " games left!")
+                const playRoundText = document.querySelector('.roundResult');
+                playRoundText.setAttribute('style', 'display:flex; justify-content: center; font-weight: bold; font-size: 26px;')
+                playRoundText.textContent = numberToString[playRoundResult];
+
+                currentScore.textContent = ('Computer\'s score is ' + computerScore + ' : ' + playerScore + ' Player\'s score');
+                currentScore.setAttribute('style', 'padding-top: 20px; text-align: center; font-size: 16px;');
                 counter ++;
             } else {
-                if (computerScore > playerScore){
-                    const lostAnswer = window.prompt("You lost the game! Wanna try again?");
-                    if (lostAnswer == "yes"){
-                        console.log(game());
-                    }
-                } else if (computerScore < playerScore){
-                    const wonAnswer = window.prompt("You won the game! Wanna play again?");
-                    if (wonAnswer == "yes"){
-                        console.log(game());
-                    }
+                currentScore.textContent = ('');
+                const gameResult = document.querySelector('.gameResult');
+                gameResult.setAttribute('style', 'text-align: center;')
+                if (computerScore > playerScore) {
+                    gameResult.textContent = ("You lost the game! Wanna try again?");
+                } else if (computerScore < playerScore) {
+                    gameResult.textContent = ("You won the game! Wanna try again?");
                 } else {
-                    const drawAnswer = window.prompt("The result of a game is draw! Wanna play another one?");
-                    if (drawAnswer == "yes"){
-                        console.log(game());
-                    }
-                }
+                    gameResult.textContent = ("The result of a game is draw! Wanna play another one?");
+                    } 
+                counter = 0;
+                const container = document.createElement('div');
+                container.setAttribute('style', 'display:flex; justify-content: center;')
+                body.appendChild(container);
+                const playAgain = document.createElement('button');
+                playAgain.textContent = "Play again";
+                playAgain.setAttribute('style', 'display: flex; justify-content: center; background-color: blue; color: white; border-width: 1px; border-radius: 5px; border-color: black;');
+                container.appendChild(playAgain);
+                playAgain.addEventListener('click', () => {
+                    counter = 0;
+                    container.removeChild(playAgain);
+                    body.removeChild(container);
+                    gameResult.textContent = ('');
+                    container.remove();
+                    playAgain.remove();
+                    game();
+                })
             }
-            
         });
     });
 
